@@ -1,0 +1,2 @@
+#https://bgwd.xattabyte.com/mcnscn?barcode=000001181111AA02_A001.009001.015&scanner_id=2
+#bgwp_api=http://192.168.1.37:8585/mcnscn?barcode=000001181111AA02_A001.009001.015&scanner_id=2

@@ -1,0 +1,49 @@
+//single machine .balde.php
+		$('#printBrcode').on('click',function(){
+			//console.log(checkIfallChecked());
+			if(checkIfallChecked()){
+				if(confirm('Are you sure !!')){
+					var _token  = $('meta[name="csrf-token"]').attr('content');
+					var grade    = (typeof($('input[name=grade]:checked').val()) !="undefined") ? $('input[name=grade]:checked').val() : '';
+					var total_print = $('input[name=totalbarcodetoprint]:checked').val();
+					var printer    = $('input[name=printer]:checked').val();
+					var packer   = (typeof($('input[name=packer]:checked').val()) !="undefined") ? $('input[name=packer]:checked').val() : '';
+					var watcher  = (typeof($('input[name=watcher]:checked').val()) !="undefined") ? $('input[name=watcher]:checked').val() : '';
+					var machine  = $('#machineNUmber').text();
+					var shift    = $('#shift').text();
+
+					$.ajax({
+						url: '{{ route('generateBarcode') }}',
+						type: 'POST',
+						dataType: 'json',
+						data: {
+							grade: grade,
+							total_print: total_print,
+							printer: printer,
+							packer: packer,
+							watcher: watcher,
+							machine: machine,
+							shift: shift,
+							_token: _token,
+
+						},
+						beforeSend:function(){
+
+						},
+						success: function(data){
+							console.log(data);
+						}
+					});
+					
+
+
+
+
+
+				}
+			}else{
+				swal("Please select all the fields");
+				//alert('Please select all the fields');
+			}
+		});
+		
