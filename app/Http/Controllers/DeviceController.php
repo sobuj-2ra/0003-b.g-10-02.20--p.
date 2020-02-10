@@ -27,7 +27,7 @@ class DeviceController extends Controller
             return redirect()->route('index')->with('warning','You are not authorized to access that page');
         }
 
-        $devices = Device::orderBy('id','desc')->get();
+        $devices = Device::orderBy('id','desc')->get(); 
         return view('admin.device.list')->with('devices',$devices);
     }
 

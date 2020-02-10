@@ -16,6 +16,9 @@ class ProductStockInController extends Controller
 
 
     public function stockinCreate(){
+      if(!Auth::user()->can('stockin_hand_device')) {
+        return redirect()->route('index')->with('warning','You are not authorized to access that page');
+      }
       return view('user.stockin_hand');
     }
     public function stockinStore(Request $request){
@@ -163,10 +166,17 @@ class ProductStockInController extends Controller
     }
 
     public function stockinReport(){
+      
+      if (!Auth::user()->can('production_stockin_report')) {
+          return redirect()->route('index')->with('warning','You are not authorized to access that page');
+      }
         return view('admin.report.stockin_report');
     }
 
     public function stockinReportResult(Request $request){
+      if (!Auth::user()->can('production_stockin_report')) {
+          return redirect()->route('index')->with('warning','You are not authorized to access that page');
+      }
         $from = $fromDate = $request->from_date;
         $from = date('Y-m-d',strtotime($from));
         $from  = $from.' 00:00:00';
@@ -185,6 +195,10 @@ class ProductStockInController extends Controller
     }
 
     public function storeReport(){
+      if (!Auth::user()->can('production_store_report')) {
+          return redirect()->route('index')->with('warning','You are not authorized to access that page');
+      }
+
       $StoreData = Item::all();
       return view('admin.report.store_report_result',compact('StoreData'));
     }

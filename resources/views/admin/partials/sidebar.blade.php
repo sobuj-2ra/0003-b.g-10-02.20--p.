@@ -53,6 +53,18 @@
       <li><a href="{{ route('users.create') }}"><i class="fa fa-circle-o"></i>Add</a></li>
     </ul>
   </li>
+  <li class="treeview">
+    <a href="#">
+      <i class="fa fa-dashboard"></i> <span>Order Request</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      <li><a href="{{ URL::to('') }}"><i class="fa fa-circle-o"></i>List</a></li>
+      <li><a href="{{ URL::to('orderref/create') }}"><i class="fa fa-circle-o"></i>Add</a></li>
+    </ul>
+  </li>
 
   <li class="treeview">
     <a href="#">

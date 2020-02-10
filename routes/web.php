@@ -156,3 +156,8 @@ Route::get('demo','TestController@demo');
 Route::get('report/production/summary', 'InvoiceController@ReportProductionSumm');
 Route::post('report/production/summary', 'InvoiceController@ReportProductionSummStore');
 Route::get('report/production/details', 'InvoiceController@ReportProductionDetails');
+
+
+// sell section //
+Route::resource('orderref','OrderRefController');
+

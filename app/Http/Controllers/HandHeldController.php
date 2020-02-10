@@ -13,6 +13,10 @@ class HandHeldController extends Controller
 {
 
     public function handHeldSection(){
+
+      if(!Auth::user()->can('production_store_report')) {
+        return redirect()->route('index')->with('warning','You are not authorized to access that page');
+      }
       $is_login = Auth::user();
       if($is_login){
         return view('user.main_handheld');

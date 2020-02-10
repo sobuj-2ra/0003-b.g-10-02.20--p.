@@ -202,11 +202,20 @@ class InvoiceController extends Controller
 
 
     public function ReportProductionSumm(){
+
+      if (!Auth::user()->can('production_sum_report')) {
+          return redirect()->route('index')->with('warning','You are not authorized to access that page');
+      }
+
       return view('admin.report.production_summ_report');
+
     }
 
     public function ReportProductionSummStore(Request $request){
 
+      if (!Auth::user()->can('production_sum_report')) {
+          return redirect()->route('index')->with('warning','You are not authorized to access that page');
+      }
         $fromDate = $request->from_date;
         $fromDateTime = strtotime($request->from_date);
         $from = Date('Y-m-d 00:00:00', $fromDateTime);

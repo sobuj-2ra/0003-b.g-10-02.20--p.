@@ -61,7 +61,7 @@
               <tr>
                 <th>#</th>
                 <th>Name</th>
-                <th>Created Date</th>
+                <th>ID</th>
                 <th>action</th>
               </tr>
              </tr>
