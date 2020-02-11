@@ -40,10 +40,10 @@
 								<br>
 							</div>
 							<div class="col-md-3">
-								<a href="" class="box-area">
+								<a href="{{URL::to('stockout-hand')}}" class="box-area">
 									<div class="stockin-area text-center">
 										<i class="fa fa-barcode text-center"></i><br>
-										Empty Two
+										Stock Out
 									</div>
 								</a>
 								<br>

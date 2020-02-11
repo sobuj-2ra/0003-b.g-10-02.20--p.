@@ -25,12 +25,18 @@
   <li class="header">MAIN NAVIGATION</li>
 
   <li class="treeview">
-      <li><a href="{{ route('dashboard') }}"><i class="fa fa-circle-o text-red"></i> <span>Dashboard</span></a></li>
+      <li><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard text-red"></i> <span>Dashboard</span></a></li>
+  </li>
+
+    <ul class="treeview-menu">
+      <li><a href="{{ route('users.index') }}"><i class="fa fa-circle-o"></i>List</a></li>
+      <li><a href="{{ route('users.create') }}"><i class="fa fa-circle-o"></i>Add</a></li>
+    </ul>
   </li>
 
   <li class="treeview">
     <a href="#">
-      <i class="fa fa-dashboard"></i> <span>Menu</span>
+      <i class="fa fa-folder-open"></i> <span>Employee</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -40,35 +46,14 @@
       <li><a href="{{ route('users.create') }}"><i class="fa fa-circle-o"></i>Add</a></li>
     </ul>
   </li>
+  <li><a href="{{ URL::to('customer/create') }}"><i class="fa fa-circle-o text-aqua"></i> <span>Customer</span></a></li>
+  <li><a href="{{ URL::to('orderref/create') }}"><i class="fa fa-circle-o text-aqua"></i> <span>Order Request</span></a></li>
+
+
 
   <li class="treeview">
     <a href="#">
-      <i class="fa fa-dashboard"></i> <span>Employee</span>
-      <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
-      </span>
-    </a>
-    <ul class="treeview-menu">
-      <li><a href="{{ route('users.index') }}"><i class="fa fa-circle-o"></i>List</a></li>
-      <li><a href="{{ route('users.create') }}"><i class="fa fa-circle-o"></i>Add</a></li>
-    </ul>
-  </li>
-  <li class="treeview">
-    <a href="#">
-      <i class="fa fa-dashboard"></i> <span>Order Request</span>
-      <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
-      </span>
-    </a>
-    <ul class="treeview-menu">
-      <li><a href="{{ URL::to('') }}"><i class="fa fa-circle-o"></i>List</a></li>
-      <li><a href="{{ URL::to('orderref/create') }}"><i class="fa fa-circle-o"></i>Add</a></li>
-    </ul>
-  </li>
-
-  <li class="treeview">
-    <a href="#">
-      <i class="fa fa-dashboard"></i> <span>Device</span>
+      <i class="fa fa-folder-open"></i> <span>Device</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -81,7 +66,7 @@
 
   <li class="treeview">
     <a href="#">
-      <i class="fa fa-dashboard"></i> <span>Machine</span>
+      <i class="fa fa-folder-open"></i> <span>Machine</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -94,7 +79,7 @@
 
   <li class="treeview">
     <a href="#">
-      <i class="fa fa-dashboard"></i> <span>Shift</span>
+      <i class="fa fa-folder-open"></i> <span>Shift</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -107,7 +92,7 @@
 
   <li class="treeview">
     <a href="#">
-      <i class="fa fa-dashboard"></i> <span>Items</span>
+      <i class="fa fa-folder-open"></i> <span>Items</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -120,7 +105,7 @@
 
   <li class="treeview">
     <a href="#">
-      <i class="fa fa-dashboard"></i> <span>Group Name</span>
+      <i class="fa fa-folder-open"></i> <span>Group Name</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -133,7 +118,7 @@
 
   <li class="treeview">
     <a href="#">
-      <i class="fa fa-dashboard"></i> <span>InvoiceInfo</span>
+      <i class="fa fa-folder-open"></i> <span>InvoiceInfo</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -145,7 +130,7 @@
 
   <li class="treeview">
     <a href="#">
-      <i class="fa fa-dashboard"></i> <span>Orders</span>
+      <i class="fa fa-folder-open"></i> <span>Orders</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -158,7 +143,7 @@
 
   <li class="treeview">
     <a href="#">
-      <i class="fa fa-dashboard"></i> <span>Reports</span>
+      <i class="fa fa-folder-open"></i> <span>Reports</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>

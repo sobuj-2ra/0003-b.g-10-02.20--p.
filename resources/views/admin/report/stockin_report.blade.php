@@ -70,7 +70,6 @@
 <script src="{{ asset('public/admin_asset/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
 <script src="{{asset('public/front_end/js/jQuery-ui.js')}}"></script>
 <link rel="stylesheet" href="{{asset('public/front_end/css/jQuery-ui.css')}}">
-<link rel="stylesheet" href="{{asset('public/front_end/css/jQuery-ui.css')}}">
 <script type="text/javascript">
 	$(function(){
 		// Datemask dd/mm/yyyy

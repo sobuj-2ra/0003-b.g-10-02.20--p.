@@ -6,6 +6,9 @@ use App\Events\NewSalesOrderAdded;
 use App\Item;
 use App\ProductStockIn;
 use App\Stockout;
+use App\OrderRef;
+use App\Barcode;
+use App\Failed_handheld;
 use App\Temporarystockout;
 use App\Traits\FindItemFromBarcode;
 use App\Traits\LogActivity;
@@ -118,6 +121,95 @@ class StockoutController extends Controller
       $this->LogActivity(Auth::user()->name,'Added New Sales Order',$request->except('_token'),'',Auth::user()->employee_id);
 
       return $sales_order;
+    }
+
+
+    public function stockOutHand(){
+      $allOrderRef = OrderRef::orderBy('id','DESC')->get();
+      return view('user.stockout_hand',compact('allOrderRef'));
+    }
+    public function stockOutStoreTemp(Request $request){
+            $datas = $request->all();
+            $user_id = Auth::user()->id;
+            $curDate = Date('Y-m-d H:i:s');
+            $curTime = Date('H:i:s');
+            $selDate = strtotime($datas['selected_date']);
+            $selectedDate = Date("Y-m-d $curTime",$selDate);
+            $order_ref = $request->order_ref;
+            $arrTemp = [];
+            $succArr = [];
+            $rejectArr = [];
+
+            foreach($request->barcode as $index=>$row)
+            {
+              $arrTemp[$index]['barcode'] = $datas['barcode'][$index];
+            }
+
+
+            foreach($arrTemp as $i=>$item){
+
+              $bar_code = $item['barcode'];
+
+              $getbarcode = Barcode::where('barcode', $bar_code)->where('status','<>',0)->first();
+              if($getbarcode){
+                $check_if_already_stockout = Temporarystockout::where('barcode',$getbarcode->barcode)->where('status',1)->count();
+                if($check_if_already_stockout < 1){
+                    $datastockin = new Temporarystockout([
+                      'order_ref' => $order_ref,
+                      'barcode' => $getbarcode->barcode,
+                      'item' =>$getbarcode->item,
+                      'batch' => $getbarcode->batch_no,
+                      'selected_date' => $selectedDate,
+                      'saved_by' => $user_id,
+                      'status' => 1,
+                    ]);
+                    $datastockin->save();
+                    
+                    // $oldItemQty = Item::where('item_code',$getbarcode->item)->first();
+                    // $qtyF = $oldItemQty['item_qty']+1;
+                    // $itemData = Item::where('item_code',$getbarcode->item)->first();
+                    // $itemData->item_qty = $qtyF;
+                    // $itemData->update();
+                    $barcodeT = Barcode::where('barcode',$getbarcode->barcode)->first();
+                    $barcodeT->status = 3;
+                    $barcodeT->update();
+
+                    $succArr[$i]['barcode'] = $item['barcode'];
+                }
+                else{
+                  $rejectArr[$i]['barcode'] = $item['barcode'];
+                }
+              }else{
+                $rejectArr[$i]['barcode'] = $item['barcode'];
+              }
+
+            }
+            foreach ($rejectArr as $reItem){
+              Failed_handheld::create([
+                      'barcode' =>  $reItem['barcode'],
+                      'fail_by' =>  $user_id,
+                      'status' =>  3,
+                      'fail_date' =>  $curDate,
+                  ]);
+            }
+
+
+            $total_fail_data = Failed_handheld::where('fail_by',$user_id)
+              ->whereDate('fail_date', Date('Y-m-d'))
+              ->count();
+            //$total_fail_data = count($total_fail_data);
+            //echo 'Total F'.$total_fail_data;
+
+            $total_save = Temporarystockout::whereDate('selected_date', Date('Y-m-d'))
+                      ->where('saved_by',$user_id)
+                      ->where('status',1)
+                      ->count();
+          // $total_save = count($total_save);
+            $recent_saved = count($succArr);
+            $recent_failed = count($rejectArr);
+
+          return response()->json(['reject'=>$rejectArr,'total_save'=>$total_save,'total_fail'=>$total_fail_data,'rec_save'=>$recent_saved,'rec_fail'=>$recent_failed]);
+
     }
 
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Barcode;
 use App\ProductStockIn;
-use App\Fail_stockin;
+use App\Failed_handheld;
 use App\Item;
 use Auth;
 use DB;
@@ -60,7 +60,7 @@ class ProductStockInController extends Controller
                     $itemData->item_qty = $qtyF;
                     $itemData->update();
                     $barcodeT = Barcode::where('barcode',$getbarcode->barcode)->first();
-                    $barcodeT->status = 0;
+                    $barcodeT->status = 2;
                     $barcodeT->update();
 
                     $succArr[$i]['barcode'] = $item['barcode'];
@@ -74,15 +74,16 @@ class ProductStockInController extends Controller
 
             }
             foreach ($rejectArr as $reItem){
-              Fail_stockin::create([
+              Failed_handheld::create([
                       'barcode' =>  $reItem['barcode'],
                       'fail_by' =>  $user_id,
+                      'status' =>  2,
                       'fail_date' =>  $curDate,
                   ]);
             }
 
 
-            $total_fail_data = Fail_stockin::where('fail_by',$user_id)
+            $total_fail_data = Failed_handheld::where('fail_by',$user_id)
               ->whereDate('fail_date', Date('Y-m-d'))
               ->count();
             //$total_fail_data = count($total_fail_data);
@@ -105,7 +106,7 @@ class ProductStockInController extends Controller
         $curDate = Date('Y-m-d');
 
 
-        $total_fail_data = Fail_stockin::where('fail_by',$user_id)
+        $total_fail_data = Failed_handheld::where('fail_by',$user_id)
           ->whereDate('fail_date', Date('Y-m-d'))
           ->count();
         //$total_fail_data = count($total_fail_data);

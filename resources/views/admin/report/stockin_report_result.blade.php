@@ -176,8 +176,8 @@
 <script src="{{ asset('public/admin_asset/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
 <script src="{{ asset('public/admin_asset/plugins/input-mask/jquery.inputmask.numeric.extensions.js') }}"></script>
 <script src="{{ asset('public/admin_asset/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="{{asset('public/front_end/js/jQuery-ui.js')}}"></script>
+<link rel="stylesheet" href="{{asset('public/front_end/css/jQuery-ui.css')}}">
 <script type="text/javascript">
 	$(function(){
 

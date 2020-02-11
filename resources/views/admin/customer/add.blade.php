@@ -18,7 +18,7 @@
     <section class="content">
       <!-- general form elements -->
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-md-offset-3">
             @if(!Session::has('edit'))
               <div class="box box-success">
                 <div class="box-header with-border">
@@ -37,17 +37,6 @@
                 <form role="form" id="" action="{{ URL::to('/orderref') }}" method="POST">
                   <div class="box-body">
                       {{ csrf_field() }}
-                      <div class="col-sm-12">
-                        <div class="form-group">
-                          <label for="customer_name">Customer Name</label>
-                          <select name="cust_name" class="form-control selectpicker" id="cust_name" data-live-search="true" >
-                            <option value=""></option> 
-                            @foreach ($allCustomer as $customer)
-                                <option value="{{$customer->id}}">{{$customer->cust_name}}</option>
-                            @endforeach
-                          </select>
-                        </div>
-                      </div>
                       <div class="col-sm-8">
                         <div class="form-group">
                           <label for="name">Order Reference</label>
@@ -79,21 +68,6 @@
                   @method('PUT')
                   {{ csrf_field() }}
                   <div class="box-body">
-                    <div class="col-sm-12">
-                      <div class="form-group">
-                        <label for="customer_name">Customer Name</label>
-                        <select name="cust_name" class="form-control selectpicker" id="cust_name" data-live-search="true" >
-                          <option value=""></option> 
-                          @foreach ($allCustomer as $customer)
-                              @if(Session::get('custId') == $customer->id)
-                                <option value="{{$customer->id}}" selected>{{$customer->cust_name}}</option>
-                              @else
-                                <option value="{{$customer->id}}">{{$customer->cust_name}}</option>
-                              @endif
-                          @endforeach
-                        </select>
-                      </div>
-                    </div>
                       <div class="col-sm-8">
                         <div class="form-group">
                           <label for="name">Order Reference</label>
@@ -121,7 +95,7 @@
 
 
         <!-- general form elements -->
-          <div class="col-md-6">
+          <div class="col-md-12">
           <div class="box box-success">
             <div class="box-body">
               <div class="col-md-10 col-md-offset-1">
@@ -144,15 +118,16 @@
                       </tr>
                     </tbody>
                     <tbody>
-                      @if(isset($allOrderRef))
-                        @foreach ($allOrderRef as $item)
+                      @if(isset($allCustomer))
+                        @foreach ($allCustomer as $item)
                           <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$item->order_ref_no}}</td>
-                            <td>{{$item->GetCustName['cust_name']}}</td>
+                            <td>{{$item->cust_name}}</td>
+                            <td>{{$item->phone}}</td>
+                            <td>{{$item->address}}</td>
                             <td><?php if($item->status == 1){ echo 'Active';}else{ echo 'Inactive';} ?></td>
-                          <td><a onclick="return confirm('Are you sure! you want to Edit?')" class="btn btn-info" href="{{URL::to('orderref').'/'.$item->id.'/edit'}}">Edit</a>
-                          <a onclick="return confirm('Are you sure! you want to delete?')" class="btn btn-danger" href="{{URL::to('orderref/delete').'/'.$item->id}}">Delete</a></td>
+                          <td><a onclick="return confirm('Are you sure! you want to Edit?')" class="btn btn-info" href="{{URL::to('customer').'/'.$item->id.'/edit'}}">Edit</a>
+                          <a onclick="return confirm('Are you sure! you want to delete?')" class="btn btn-danger" href="{{URL::to('customer/delete').'/'.$item->id}}">Delete</a></td>
                           </tr>
                         @endforeach
                       @else

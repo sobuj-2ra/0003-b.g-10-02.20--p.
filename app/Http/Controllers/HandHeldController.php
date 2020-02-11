@@ -7,6 +7,7 @@ use App\Stockout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Device;
+use App\OrderRef;
 use Auth;
 
 class HandHeldController extends Controller
@@ -127,4 +128,7 @@ class HandHeldController extends Controller
 
 
     }
+
+
+
 }

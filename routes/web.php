@@ -160,4 +160,9 @@ Route::get('report/production/details', 'InvoiceController@ReportProductionDetai
 
 // sell section //
 Route::resource('orderref','OrderRefController');
+Route::get('orderref/delete/{id}','OrderRefController@destroy');
+Route::get('stockout-hand','StockoutController@stockOutHand');
+Route::post('stockout_m_store_temp','StockoutController@stockOutStoreTemp');
+
+Route::resource('customer','CustomerController');
 
