@@ -7,6 +7,7 @@ use App\Item;
 use App\ProductStockIn;
 use App\Stockout;
 use App\OrderRef;
+use App\Customer;
 use App\Barcode;
 use App\Failed_handheld;
 use App\Temporarystockout;
@@ -22,6 +23,10 @@ class StockoutController extends Controller
 
     public function __construct(){
        $this->middleware('auth');
+    }
+
+    public function allItemMenu(){
+      return view('user.main_delivery');
     }
 
     public function index()
@@ -211,6 +216,34 @@ class StockoutController extends Controller
           return response()->json(['reject'=>$rejectArr,'total_save'=>$total_save,'total_fail'=>$total_fail_data,'rec_save'=>$recent_saved,'rec_fail'=>$recent_failed]);
 
     }
+
+
+    public function SlipSectioinView(){
+      $allRef = Temporarystockout::where('order_ref','<>',null)->groupBy('order_ref')->orderBy('id','DESC')->get();
+      return view('user.slip_view',compact('allRef'));
+    }
+    public function SlipSearchDataGet(Request $r){
+      $ref = $r->order_ref;
+      $cust_ref = OrderRef::select('order_ref_no','cust_id')->where('order_ref_no',$ref)->first();
+      $cust_name = Customer::find($cust_ref->cust_id);
+      $cust_name = $cust_name->cust_name;
+      
+      $allRef = Temporarystockout::where('order_ref','<>',null)->groupBy('order_ref')->orderBy('id','DESC')->get();
+      $itemWise = Temporarystockout::where('order_ref',$ref)->groupBy('item')->get();
+      return view('user.slip_view',compact('allRef','itemWise','ref','cust_name'));
+    }
+    
+    public function SlipSearchDataPrint(Request $r){
+      
+      $transport_no = $r->transport_no;
+      $ref = $r->ref_no;
+      $cust_name = $r->cust_name;
+      
+      $allRef = Temporarystockout::where('order_ref','<>',null)->groupBy('order_ref')->orderBy('id','DESC')->get();
+      $itemWise = Temporarystockout::where('order_ref',$ref)->groupBy('item')->get();
+      return view('user.slip_view_print',compact('allRef','itemWise','ref','transport_no','cust_name'));
+    }
+
 
 
 }

@@ -46,8 +46,8 @@
       <li><a href="{{ route('users.create') }}"><i class="fa fa-circle-o"></i>Add</a></li>
     </ul>
   </li>
-  <li><a href="{{ URL::to('customer/create') }}"><i class="fa fa-circle-o text-aqua"></i> <span>Customer</span></a></li>
-  <li><a href="{{ URL::to('orderref/create') }}"><i class="fa fa-circle-o text-aqua"></i> <span>Order Request</span></a></li>
+  <li><a href="{{ URL::to('customer') }}"><i class="fa fa-circle-o text-aqua"></i> <span>Customer</span></a></li>
+  <li><a href="{{ URL::to('orderref/create') }}"><i class="fa fa-circle-o text-aqua"></i> <span>Order Referance</span></a></li>
 
 
 

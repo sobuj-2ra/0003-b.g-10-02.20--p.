@@ -114,6 +114,12 @@ Route::get('stockouts','StockoutController@index')->name('stockouts');
 Route::get('stockouts/{ref_no}','StockoutController@show')->name('singleStockout');
 Route::post('placeorder','StockoutController@store')->name('placeorder');
 
+Route::get('delivery-section','StockoutController@allItemMenu');
+Route::get('stockout-slip','StockoutController@SlipSectioinView');
+Route::post('stockout-slip','StockoutController@SlipSearchDataGet');
+Route::get('stockout-slip-print','StockoutController@SlipSearchDataPrint');
+
+
 //Sales order
 Route::post('tempSalesOrder','StockoutController@tempSalesOrder')->name('tempSalesOrder');
 
@@ -165,4 +171,8 @@ Route::get('stockout-hand','StockoutController@stockOutHand');
 Route::post('stockout_m_store_temp','StockoutController@stockOutStoreTemp');
 
 Route::resource('customer','CustomerController');
+Route::get('customer/delete/{id}','CustomerController@destroy');
+
+
+/// delivery section //
 

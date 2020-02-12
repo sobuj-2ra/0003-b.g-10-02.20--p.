@@ -37,7 +37,7 @@
                     </div>
 
                     <div class="col-4 mb-3">
-                        <a href="{{ route('stockouts') }}" class="">
+                        <a href="{{ URL::to('delivery-section') }}" class="">
                             <div class="card text-white border-danger bg-danger p-1 text-center">
                                 <div class="card-body">
                                     <h2 class="card-title">Delivery Section</h2>

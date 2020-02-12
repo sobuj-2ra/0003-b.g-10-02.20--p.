@@ -79,24 +79,9 @@
                   @method('PUT')
                   {{ csrf_field() }}
                   <div class="box-body">
-                    <div class="col-sm-12">
-                      <div class="form-group">
-                        <label for="customer_name">Customer Name</label>
-                        <select name="cust_name" class="form-control selectpicker" id="cust_name" data-live-search="true" >
-                          <option value=""></option> 
-                          @foreach ($allCustomer as $customer)
-                              @if(Session::get('custId') == $customer->id)
-                                <option value="{{$customer->id}}" selected>{{$customer->cust_name}}</option>
-                              @else
-                                <option value="{{$customer->id}}">{{$customer->cust_name}}</option>
-                              @endif
-                          @endforeach
-                        </select>
-                      </div>
-                    </div>
                       <div class="col-sm-8">
                         <div class="form-group">
-                          <label for="name">Order Reference</label>
+                          <label for="name">Group Name</label>
                           <input type="text" name="order_ref" class="form-control" id="order_ref" value="{{Session::get('ref_no')}}" placeholder="Enter Order Ref No"  required="">
                         </div>
                       </div>

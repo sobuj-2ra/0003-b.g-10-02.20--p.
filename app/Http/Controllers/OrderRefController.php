@@ -93,10 +93,10 @@ class OrderRefController extends Controller
      */
     public function update(Request $r, $id)
     {
-        $is_save = OrderRef::find($id)->Create(['order_ref_no'=>$r->order_ref,'status'=>$r->status]);
+        $is_save = OrderRef::find($id)->update(['order_ref_no'=>$r->order_ref,'status'=>$r->status]);
 
         if($is_save){
-            return redirect()->back()->with(['msg'=>'Data Uodated Successfully','status'=>'success','add'=>1]);
+            return redirect()->back()->with(['msg'=>'Data Updated Successfully','status'=>'success','add'=>1]);
         }
         else{
             return redirect()->back()->with(['msg'=>'Data Couldn\'t update','status'=>'danger','add'=>1]);

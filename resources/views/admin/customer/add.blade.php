@@ -11,21 +11,21 @@
 <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1 style="display: inline-block;">
-        Order Reference
+        Customer
       </h1>
     </section>
     <!-- Main content -->
     <section class="content">
       <!-- general form elements -->
       <div class="row">
-        <div class="col-md-6 col-md-offset-3">
+        <div class="col-md-10 col-md-offset-1">
             @if(!Session::has('edit'))
               <div class="box box-success">
-                <div class="box-header with-border">
+                <div class="box-header ">
                   @include('includes.messages')
                   <div id="form_output"></div>
                 </div>
-                <div class="col-md-10 col-md-offset-1">
+                <div class="col-md-6 col-md-offset-3">
                   @if(Session::has('msg') && Session::get('add') == '1')
                     <div class="alert alert-{{Session::get('status')}}">
                       <span style="text-align:center">{{Session::get('msg')}}</span>
@@ -34,27 +34,34 @@
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form role="form" id="" action="{{ URL::to('/orderref') }}" method="POST">
+                <form role="form" id="" action="{{ URL::to('/customer') }}" method="POST">
                   <div class="box-body">
                       {{ csrf_field() }}
-                      <div class="col-sm-8">
+                      <div class="col-sm-6">
                         <div class="form-group">
-                          <label for="name">Order Reference</label>
-                          <input type="text" name="order_ref" class="form-control" id="order_ref" placeholder="Enter Order Ref No"  required="">
+                          <label for="name">Customer</label>
+                          <input type="text" name="cust_name" class="form-control" id="order_ref" placeholder="Enter Customer Name"  required="">
+                        </div>
+                        <div class="form-group">
+                          <label for="name">Phone</label>
+                          <input type="text" name="phone" class="form-control" id="order_ref" placeholder="Enter Phone No"  required="">
                         </div>
                       </div>
-                      <div class="col-sm-4">
+                      <div class="col-sm-5">
                         <div class="form-group">
-                          <label for="name">Status</label>
-                          <select class="form-control" name="status" id="" request>
-                            <option value="1">Active</option>
-                            <option value="0">inactive</option>
-                          </select>
+                          <label for="name">Company Name</label>
+                          <input type="text" name="company_name" class="form-control"  placeholder="Enter Company Name" >
+                        </div>
+                        <div class="form-group">
+                          <label for="name">Address</label>
+                          <input type="text" name="address" class="form-control"  placeholder="Enter Address" >
                         </div>
                       </div>
                   </div>
                   <div class="box-footer">
-                    <button type="submit" id="add_data" class="btn btn-success">Submit</button>
+                    <div class="col-sm-12">
+                      <button type="submit" id="add_data" class="btn btn-success">Submit</button>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -64,25 +71,30 @@
                   @include('includes.messages')
                   <div id="form_output"></div>
                 </div>
-                <form  action="{{ URL::to('orderref/'.Session::get('id'))}}" method="POST">
+                <form  action="{{ URL::to('customer/'.Session::get('id'))}}" method="POST">
                   @method('PUT')
                   {{ csrf_field() }}
                   <div class="box-body">
-                      <div class="col-sm-8">
-                        <div class="form-group">
-                          <label for="name">Order Reference</label>
-                          <input type="text" name="order_ref" class="form-control" id="order_ref" value="{{Session::get('ref_no')}}" placeholder="Enter Order Ref No"  required="">
-                        </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="name">Customer</label>
+                      <input type="text" name="cust_name" class="form-control" id="order_ref" value="{{Session::get('cust_name')}}" placeholder="Enter Customer Name"  required="">
                       </div>
-                      <div class="col-sm-4">
-                        <div class="form-group">
-                          <label for="name">Status</label>
-                          <select class="form-control" name="status" id="" request>
-                              <option value="1" <?php if(Session::get('status') == 1){ echo 'selected';}?> >Active</option>
-                              <option value="0" <?php if(Session::get('status') == 0){ echo 'selected';}?> >inactive</option>
-                          </select>
-                        </div>
+                      <div class="form-group">
+                        <label for="name">Phone</label>
+                        <input type="text" name="phone" class="form-control" id="order_ref" value="{{Session::get('phone')}}" placeholder="Enter Phone No"  required="">
                       </div>
+                    </div>
+                    <div class="col-sm-5">
+                      <div class="form-group">
+                        <label for="name">Company Name</label>
+                        <input type="text" name="company_name" class="form-control" value="{{Session::get('company')}}"  placeholder="Enter Company Name" >
+                      </div>
+                      <div class="form-group">
+                        <label for="name">Address</label>
+                        <input type="text" name="address" class="form-control" value="{{Session::get('address')}}" placeholder="Enter Address" >
+                      </div>
+                    </div>
                   </div>
                   <div class="box-footer">
                     <button type="submit" id="add_data" class="btn btn-info">Update</button>
@@ -105,15 +117,18 @@
                   </div>
                 @endif
               </div>
-                <h2 style="text-align:center;margin-bottom:0">Order Reference List</h2>
-                <hr>
+                <div class="col-md-12">
+                  <h2 style="text-align:center;margin-bottom:0">Order Reference List</h2>
+                  <hr>
+                </div>
                   <table class="table table-responsive table-striped">
                     <tbody>
                       <tr>
                         <th>Sl</th>
-                        <th>Order Ref No</th>
-                        <th>Customer</th>
-                        <th>Status</th>
+                        <th>Customer Name</th>
+                        <th>Phone</th>
+                        <th>Company Name</th>
+                        <th>Address</th>
                         <th>Action</th>
                       </tr>
                     </tbody>
@@ -124,8 +139,8 @@
                             <td>{{$loop->iteration}}</td>
                             <td>{{$item->cust_name}}</td>
                             <td>{{$item->phone}}</td>
+                            <td>{{$item->company}}</td>
                             <td>{{$item->address}}</td>
-                            <td><?php if($item->status == 1){ echo 'Active';}else{ echo 'Inactive';} ?></td>
                           <td><a onclick="return confirm('Are you sure! you want to Edit?')" class="btn btn-info" href="{{URL::to('customer').'/'.$item->id.'/edit'}}">Edit</a>
                           <a onclick="return confirm('Are you sure! you want to delete?')" class="btn btn-danger" href="{{URL::to('customer/delete').'/'.$item->id}}">Delete</a></td>
                           </tr>
