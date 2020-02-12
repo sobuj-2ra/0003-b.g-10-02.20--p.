@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\OrderRef;
 use App\Customer;
+use Auth;
 
 class OrderRefController extends Controller
 {
@@ -25,6 +26,9 @@ class OrderRefController extends Controller
      */
     public function create()
     {
+        if(!Auth::user()->can('order_ref_add')) {
+            return redirect()->route('index')->with('warning','You are not authorized to access that page');
+        }
         $allOrderRef = OrderRef::orderby('id','DESC')->with('GetCustName')->get();
         $allCustomer = Customer::orderby('id','DESC')->get();
         return view('admin.order_ref.add',compact('allOrderRef','allCustomer'));

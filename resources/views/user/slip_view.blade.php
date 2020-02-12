@@ -62,6 +62,7 @@
                                                         <th>Quantity(Pcs)</th>
                                                         <th>Quantity(Cartons)</th>
                                                         <th>Batch No.</th>
+                                                        <th>Action.</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -76,14 +77,46 @@
                                                             for($i = 0;$i < $batch_c;$i++){
                                                                 echo "<tr>";
                                                                     if($is_item){
-                                                                        echo "<td rowspan=".$batch_c.">".$item_data['item_name']."</item>";
-                                                                        echo "<td rowspan=".$batch_c.">".$item_data['pack_size']*$item_c."</item>";
-                                                                        echo "<td rowspan=".$batch_c.">".$item_c."</item>";
+                                                                        echo "<td rowspan=".$batch_c.">".$item_data['item_name']."</td>";
+                                                                        echo "<td rowspan=".$batch_c.">".$item_data['pack_size']*$item_c."</td>";
+                                                                        echo "<td rowspan=".$batch_c.">".$item_c."</td>";
+                                                                    }
+                                                                        echo "<td>".$batch_data[$i]->batch."</td>";
+                                                                 
+                                                                    if($is_item){
+                                                                        echo "<td rowspan=".$batch_c.">";
+                                                                            ?>
+                                                                               <!-- Button trigger modal -->
+                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                                                                        Launch demo modal
+                                                                                    </button>
+
+                                                                            <?php
+                                                                        echo "</td>";
+                                                                        ?>
+                                                                            <!-- Modal -->
+                                                                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                                <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                    ...
+                                                                                    </div>
+                                                                                    <div class="modal-footer">
+                                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php
                                                                         $is_item = false;   
                                                                     }
-                                                                    // if($){
-                                                                        echo "<td>".$batch_data[$i]->batch."</td>";
-                                                                    // }
                                                                 echo "</tr>";
                                                             }
                                                             $is_item = true; 
@@ -98,7 +131,7 @@
                                             </table>
                                             @if(@$itemWise && count($itemWise) > 0)
                                                 <form action="{{URL::to('stockout-slip-print')}}" method="GET">
-                                                    Transport No. <input type="number" name="transport_no" required> <input class="btn btn-warning" type="submit" value="Print">
+                                                    Transport No. <input type="text" name="transport_no" required> <input class="btn btn-warning" type="submit" value="Print">
                                                     <input type="hidden" name="ref_no" value="{{@$ref}}">
                                                     <input type="hidden" name="cust_name" value="{{@$cust_name}}">
                                                 </form>

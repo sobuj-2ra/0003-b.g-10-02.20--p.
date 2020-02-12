@@ -141,8 +141,13 @@
                             <td>{{$item->phone}}</td>
                             <td>{{$item->company}}</td>
                             <td>{{$item->address}}</td>
-                          <td><a onclick="return confirm('Are you sure! you want to Edit?')" class="btn btn-info" href="{{URL::to('customer').'/'.$item->id.'/edit'}}">Edit</a>
-                          <a onclick="return confirm('Are you sure! you want to delete?')" class="btn btn-danger" href="{{URL::to('customer/delete').'/'.$item->id}}">Delete</a></td>
+                          <td>
+                            @can('customer_edit')
+                            <a onclick="return confirm('Are you sure! you want to Edit?')" class="btn btn-info" href="{{URL::to('customer').'/'.$item->id.'/edit'}}">Edit</a>
+                            @endcan
+                            @can('customer_delete')
+                            <a onclick="return confirm('Are you sure! you want to delete?')" class="btn btn-danger" href="{{URL::to('customer/delete').'/'.$item->id}}">Delete</a></td>
+                            @endcan
                           </tr>
                         @endforeach
                       @else

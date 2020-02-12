@@ -136,8 +136,13 @@
                             <td>{{$item->order_ref_no}}</td>
                             <td>{{$item->GetCustName['cust_name']}}</td>
                             <td><?php if($item->status == 1){ echo 'Active';}else{ echo 'Inactive';} ?></td>
-                          <td><a onclick="return confirm('Are you sure! you want to Edit?')" class="btn btn-info" href="{{URL::to('orderref').'/'.$item->id.'/edit'}}">Edit</a>
-                          <a onclick="return confirm('Are you sure! you want to delete?')" class="btn btn-danger" href="{{URL::to('orderref/delete').'/'.$item->id}}">Delete</a></td>
+                          <td>
+                            @can('order_ref_edit')
+                            <a onclick="return confirm('Are you sure! you want to Edit?')" class="btn btn-info" href="{{URL::to('orderref').'/'.$item->id.'/edit'}}">Edit</a>
+                            @endcan
+                            @can('order_ref_delete')
+                            <a onclick="return confirm('Are you sure! you want to delete?')" class="btn btn-danger" href="{{URL::to('orderref/delete').'/'.$item->id}}">Delete</a></td>
+                            @endcan
                           </tr>
                         @endforeach
                       @else

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Customer;
+use Auth;
 
 class CustomerController extends Controller
 {
@@ -13,7 +14,10 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {   
+        if(!Auth::user()->can('customer_add')) {
+            return redirect()->route('index')->with('warning','You are not authorized to access that page');
+        }
         $allCustomer = Customer::orderby('id','DESC')->get();
         return view('admin.customer.add',compact('allCustomer'));
     }
