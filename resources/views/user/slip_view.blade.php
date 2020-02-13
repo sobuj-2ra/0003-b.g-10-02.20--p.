@@ -55,7 +55,7 @@
                                                 @if(@$itemWise && count($itemWise) > 0)
                                                 <thead>
                                                     <tr>
-                                                        <th colspan="4" style="text-align:center">Order Reference Search Data</th>
+                                                        <th colspan="5" style="text-align:center">Order Reference Search Data</th>
                                                     </tr>
                                                     <tr>
                                                         <th>Item</th>
@@ -70,8 +70,8 @@
                                                         $is_item = true;
                                                         foreach($itemWise as $item){
                                                             $item_data = App\Item::select('item_code','item_name', 'pack_size')->where('item_code',$item->item)->first();
-                                                            $item_c = App\Temporarystockout::where('item',$item->item)->count();
-                                                            $batch_data = App\Temporarystockout::where('item',$item->item)->groupBy('batch')->get();
+                                                            $item_c = App\Temporarystockout::where('item',$item->item)->where('status',1)->count();
+                                                            $batch_data = App\Temporarystockout::where('item',$item->item)->where('status',1)->groupBy('batch')->get();
                                                             $batch_c = count($batch_data);
 
                                                             for($i = 0;$i < $batch_c;$i++){
@@ -86,35 +86,10 @@
                                                                     if($is_item){
                                                                         echo "<td rowspan=".$batch_c.">";
                                                                             ?>
-                                                                               <!-- Button trigger modal -->
-                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                                                                        Launch demo modal
-                                                                                    </button>
+                                                                               
 
                                                                             <?php
                                                                         echo "</td>";
-                                                                        ?>
-                                                                            <!-- Modal -->
-                                                                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                                                <div class="modal-dialog" role="document">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                        <span aria-hidden="true">&times;</span>
-                                                                                    </button>
-                                                                                    </div>
-                                                                                    <div class="modal-body">
-                                                                                    ...
-                                                                                    </div>
-                                                                                    <div class="modal-footer">
-                                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                                                                    </div>
-                                                                                </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        <?php
                                                                         $is_item = false;   
                                                                     }
                                                                 echo "</tr>";
@@ -131,9 +106,11 @@
                                             </table>
                                             @if(@$itemWise && count($itemWise) > 0)
                                                 <form action="{{URL::to('stockout-slip-print')}}" method="GET">
-                                                    Transport No. <input type="text" name="transport_no" required> <input class="btn btn-warning" type="submit" value="Print">
+                                                    Transport No. <input type="text" name="transport_no" required> Sales Order: <input type="text" name="sales_order" required> <input onclick="return confirm('Are You Sure! You want to Print & Save')" class="btn btn-warning" type="submit" value="Print & Save">
                                                     <input type="hidden" name="ref_no" value="{{@$ref}}">
                                                     <input type="hidden" name="cust_name" value="{{@$cust_name}}">
+                                                    <input type="hidden" name="cust_id" value="{{@$cust_id}}">
+                                                    <input type="hidden" name="sl_no" value="{{@$sl_no}}">
                                                 </form>
                                             @endif
                                         </div>

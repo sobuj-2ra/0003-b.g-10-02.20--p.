@@ -31,6 +31,15 @@
 								<br>
 							</div>
 							<div class="col-md-3">
+								<a href="{{URL::to('stockout-slip/reprint')}}" class="box-area">
+									<div class="stockin-area text-center">
+										<i class="fa fa-barcode text-center"></i><br>
+										Reprint
+									</div>
+								</a>
+								<br>
+							</div>
+							<div class="col-md-3">
 								<a href="{{URL::to('stockouts')}}" class="box-area">
 									<div class="stockin-area text-center">
 										<i class="fa fa-barcode text-center"></i><br>

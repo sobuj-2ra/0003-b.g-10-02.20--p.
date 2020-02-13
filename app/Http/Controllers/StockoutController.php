@@ -9,6 +9,7 @@ use App\Stockout;
 use App\OrderRef;
 use App\Customer;
 use App\Barcode;
+use App\StockOutNew;
 use App\Failed_handheld;
 use App\Temporarystockout;
 use App\Traits\FindItemFromBarcode;
@@ -219,29 +220,85 @@ class StockoutController extends Controller
 
 
     public function SlipSectioinView(){
-      $allRef = Temporarystockout::where('order_ref','<>',null)->groupBy('order_ref')->orderBy('id','DESC')->get();
+      $allRef = Temporarystockout::where('order_ref','<>',null)->where('status',1)->groupBy('order_ref')->orderBy('id','DESC')->get();
       return view('user.slip_view',compact('allRef'));
     }
     public function SlipSearchDataGet(Request $r){
       $ref = $r->order_ref;
       $cust_ref = OrderRef::select('order_ref_no','cust_id')->where('order_ref_no',$ref)->first();
       $cust_name = Customer::find($cust_ref->cust_id);
+      $cust_id = $cust_name->id;
       $cust_name = $cust_name->cust_name;
+      $curDate = Date("Y-m-d");
+      $lastSOData = StockOutNew::select('created_at','id','sl_no')->whereDate('created_at',$curDate)->orderBy('id','DESC')->first();
+      if($lastSOData['sl_no'] == ''){
+        $lastSl = 1;
+        $sl_no = Date('ymd').$lastSl;
+      }
+      else{
+         $sl_no = $lastSOData['sl_no']+1;
+      }
+
       
-      $allRef = Temporarystockout::where('order_ref','<>',null)->groupBy('order_ref')->orderBy('id','DESC')->get();
-      $itemWise = Temporarystockout::where('order_ref',$ref)->groupBy('item')->get();
-      return view('user.slip_view',compact('allRef','itemWise','ref','cust_name'));
+      $allRef = Temporarystockout::where('order_ref','<>',null)->where('status',1)->groupBy('order_ref')->orderBy('id','DESC')->get();
+      $itemWise = Temporarystockout::where('order_ref',$ref)->where('status',1)->groupBy('item')->get();
+      return view('user.slip_view',compact('allRef','itemWise','ref','cust_name','sl_no','cust_id'));
     }
     
     public function SlipSearchDataPrint(Request $r){
       
+      $user_id = Auth::user()->id;
       $transport_no = $r->transport_no;
       $ref = $r->ref_no;
+      $cust_id = $r->cust_id;
       $cust_name = $r->cust_name;
+      $sl_no = $r->sl_no;
+      $sales_order = $r->sales_order;
+      $curDateTime = Date("Y-m-d H:i:s");
+
       
-      $allRef = Temporarystockout::where('order_ref','<>',null)->groupBy('order_ref')->orderBy('id','DESC')->get();
-      $itemWise = Temporarystockout::where('order_ref',$ref)->groupBy('item')->get();
-      return view('user.slip_view_print',compact('allRef','itemWise','ref','transport_no','cust_name'));
+      $allTempData = Temporarystockout::where('order_ref',$ref)->where('status',1)->get();
+      foreach($allTempData as $itemData){
+        $is_save = StockOutNew::create([
+          'cust_id'=>$cust_id,
+          'ref_no'=>$ref,
+          'sl_no'=>$sl_no,
+          'sales_order'=>$sales_order,
+          'transport_no'=>$transport_no,
+          'barcode'=>$itemData->barcode,
+          'item'=>$itemData->item,
+          'batch'=>$itemData->batch,
+          'saved_by'=>$user_id,
+          'created_at'=>$curDateTime,
+        ]);
+        if($is_save){
+          $ItemGet = Item::where('item_code',$itemData->item)->first();
+          if($itemData){
+            $sub_qty = $ItemGet->item_qty - 1;
+            $itemSet =  Item::where('item_code',$ItemGet->item_code)->first();
+            $itemSet->item_qty = $sub_qty;
+            $itemSet->update();
+          }
+          Temporarystockout::where('barcode',$itemData->barcode)->update(['status'=>0]);
+        }
+      }
+      
+      $allRef = Temporarystockout::where('order_ref','<>',null)->where('status',1)->groupBy('order_ref')->orderBy('id','DESC')->get();
+      $itemWise = StockOutNew::where('ref_no',$ref)->where('sl_no',$sl_no)->groupBy('item')->get();
+      return view('user.slip_view_print',compact('allRef','itemWise','ref','transport_no','cust_name','sales_order','sl_no'));
+    }
+
+
+    public function StockOutRePrintView(){
+      $allSL = StockOutNew::where('sl_no','<>',null)->groupBy('sl_no')->orderBy('id','DESC')->get();
+      return view('user.reprint_slip_view',compact('allSL'));
+    }
+
+    public function StockOutRePrint(Request $r){
+      $sl_no = $r->sl_no;
+      $itemWise = StockOutNew::where('sl_no',$sl_no)->groupBy('item')->get();
+      return $itemWise[0];
+      return view('user.reprint_slip_print',compact('sl_no','itemWise'));
     }
 
 

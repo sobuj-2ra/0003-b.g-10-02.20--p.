@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Session;
 use App\user;
 use App\Pagepermission;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -17,6 +18,13 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    public function maniIndex(){
+        // $user_id = Auth::user()->id;
+        // if($user_id){
+            return view('welcome');
+        // }
     }
 
     /**

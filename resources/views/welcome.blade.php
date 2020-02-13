@@ -16,6 +16,7 @@
                 @include('includes.messages')
                 <div class="row text-center">
                     <div class="col-4 mb-3">
+                        @can('dailyshift_section')
                         <a href="{{ route('dailyshift') }}" class="">
                             <div class="card text-white border-danger bg-danger p-1 text-center">
                                 <div class="card-body">
@@ -24,8 +25,10 @@
                                 </div>
                             </div>
                         </a>
+                        @endcan
                     </div>
                     <div class="col-4 mb-3">
+                        @can('machine_section')
                         <a href="{{ route('allmachine') }}" class="">
                             <div class="card text-white border-danger bg-danger p-1 text-center">
                                 <div class="card-body">
@@ -34,9 +37,10 @@
                                 </div>
                             </div>
                         </a>
+                        @endcan
                     </div>
-
                     <div class="col-4 mb-3">
+                        @can('delivery_section')
                         <a href="{{ URL::to('delivery-section') }}" class="">
                             <div class="card text-white border-danger bg-danger p-1 text-center">
                                 <div class="card-body">
@@ -45,9 +49,10 @@
                                 </div>
                             </div>
                         </a>
+                        @endcan
                     </div>
-
                     <div class="col-4 mb-3">
+                        @can('admin_section')
                         <a href="{{ route('dashboard') }}" class="">
                             <div class="card text-white border-danger bg-danger p-1 text-center">
                                 <div class="card-body">
@@ -56,9 +61,10 @@
                                 </div>
                             </div>
                         </a>
+                        @endcan
                     </div>
-
                     <div class="col-4 mb-3">
+                        @can('handheld_section')
                         <a href="{{ route('hand-held-section') }}" class="">
                             <div class="card text-white border-danger bg-danger p-1 text-center">
                                 <div class="card-body">
@@ -67,8 +73,8 @@
                                 </div>
                             </div>
                         </a>
+                        @endcan
                     </div>
-
                 </div>
             </div>
 

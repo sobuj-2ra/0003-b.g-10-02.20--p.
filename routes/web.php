@@ -14,7 +14,13 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $user = Auth::user();
+    if($user){
+        return view('welcome');
+    }
+    else{
+        return redirect('/login');
+    }
 })->name('index');
 
 Auth::routes();
@@ -118,6 +124,8 @@ Route::get('delivery-section','StockoutController@allItemMenu');
 Route::get('stockout-slip','StockoutController@SlipSectioinView');
 Route::post('stockout-slip','StockoutController@SlipSearchDataGet');
 Route::get('stockout-slip-print','StockoutController@SlipSearchDataPrint');
+Route::get('stockout-slip/reprint','StockoutController@StockOutRePrintView');
+Route::post('stockout-slip/reprint','StockoutController@StockOutRePrint');
 
 
 //Sales order

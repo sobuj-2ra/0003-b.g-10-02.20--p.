@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model
-{
+{   
     public function getUser()
     {
     	return $this->belongsTo('App\User','added_by');
