@@ -10,16 +10,126 @@
 	<link rel="stylesheet" type="text/css" href="{{ asset('public/front_end/css/fontawesome.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('public/front_end/css/style.css') }}">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <style>
+        #show_detail_barcode{
+            position: absolute;
+            height:100%;
+            width:100%;
+            z-index: 99999999;
+            min-height:500px;
+            display: block;
+            margin:0 auto;
+            background: #dddd;
+        }
+    </style>
 </head>
 <body>
 @include('includes.buttons')
 <div id="handheld">
-	<div class="container pt-3 h-100">
+	<div class="container pt-3 h-100" id="app9">
 		<div class="row">
 			<div class="col-12 mx-auto">
 			</div>
 			<div class="col-12">
+                <div id="show_detail_barcode">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <button @click="dismiss_btnFunc" class="btn btn-sm bg-danger pull-right" style="background:#f55959;color:#fff;display:block"><b>X</b></button>
+                            </div>
+                            <div class="panel-body">
+                                <div class="table-area" style="overflow-x:auto;">
+                                    <table class="table table-responsive table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Sl</th>
+                                                <th>Item</th>
+                                                <th>Barcode</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0124</td>
+                                                <td>23435243542545</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-12">
                         <br>
@@ -86,7 +196,7 @@
                                                                     if($is_item){
                                                                         echo "<td rowspan=".$batch_c.">";
                                                                             ?>
-                                                                               
+                                                                                <button @click="show_btn" class="btn btn-info">Show</button>
 
                                                                             <?php
                                                                         echo "</td>";
@@ -126,7 +236,30 @@
 
 </div>
 
+<script type="text/javascript" src="{{asset('public/front_end/js/vue.js')}}"></script>
+<script type="text/javascript" src="{{asset('public/front_end/js/axios.js')}}"></script>
+<script>
+     $('#show_detail_barcode').hide();
+	 const app = new Vue({
+	    el: '#app9',
+	    data: {
+	    	sales_order :{},
+	    	test: 0,
+	    	message: ''
+	    },
 
+	    methods: {
+            dismiss_btnFunc:function(){
+                $('#show_detail_barcode').hide();
+            },
+            show_btn:function(){
+                $('#show_detail_barcode').show();
+            }
+
+
+	    }
+	});
+</script>
 
 <link rel="stylesheet"  href="{{ asset('public/admin_asset/dist/css/bootstrap-select.css') }}" />
 <script src="{{ asset('public/admin_asset/dist/js/bootstrap-select.js') }}"></script>
@@ -136,58 +269,6 @@
 <script type="text/javascript" src="{{ asset('public/front_end/js/jquery-3.2.1.slim.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('public/front_end/js/popper.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('public/front_end/js/bootstrap.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('public/front_end/js/main.js') }}"></script>
 
-<script>
-	 const app = new Vue({
-	    el: '#handheld',
-	    data: {
-	    	sales_order :{},
-	    	test: 0,
-	    	message: ''
-	    },
-
-	    mounted(){
-	    	// this.getSalesOrder()
-	    	// this.listen()
-	    },
-
-	    methods: {
-	    	getSalesOrder(){
-	    		axios.get('{{ route('getSalesOrders') }}')
-	    		.then((res) => {
-	    			// console.log(res.data);
-	    			this.sales_order = res.data;
-	    		})
-	    		.catch((err) =>{
-	    			console.log(err);
-	    		})
-	    	},
-
-	    	listen(){
-	    		Echo.channel('handheld')
-	    			.listen('NewSalesOrderAdded',(data)=>{
-	    				this.sales_order.unshift(data.stockout)
-	    				//console.log(data.stockout);
-	    			})
-	    	},
-
-	    	// getUrl(data){
-	    	// 	var url = `/`;
-	    	// 	var sales_order = data.sales_order;
-	    	// 	// console.log(url+sales_order);
-	    	// 	window.location.href = url+sales_order;
-	    	// },
-
-	    	printInvoice(single_sales_order,index){
-	    		console.log(single_sales_order,index);
-	    	}
-
-
-
-
-	    }
-	});
-</script>
 </body>
 </html>

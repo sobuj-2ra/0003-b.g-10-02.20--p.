@@ -45,13 +45,13 @@
                 </table>
                 <div class="col-xs-4"><p style="margin-top:10px">SL No: {{@$sl_no}}</p></div>
                 <div class="col-xs-4"><p style="margin-top:10px">Date: {{Date('d-m-Y h:i:s A')}}</p></div>
-                <div class="col-xs-4"><p style="margin-top:10px">Sales Order: {{@$sales_order}}</p></div>
+                <div class="col-xs-4"><p style="margin-top:10px">Sales Order: {{@$itemWise[0]->sales_order}}</p></div>
                 
                 <table border="1" class="" style="background:#FFF;width:100%;">
                     @if(@$itemWise && count($itemWise) > 0)
                     <thead>
                         <tr>
-                        <th colspan="5"  style="padding:5px;">Customer Name: {{$cust_name}}</th>
+                        <th colspan="5"  style="padding:5px;">Customer Name: {{@$cust_name}}</th>
                         </tr>
                         <tr>
                             <th style="padding:5px;text-align:center">Item</th>
@@ -65,8 +65,8 @@
                             $is_item = true;
                             foreach($itemWise as $item){
                                 $item_data = App\Item::select('item_code','item_name', 'pack_size')->where('item_code',$item->item)->first();
-                                $item_c = App\StockOutNew::where('item',$item->item)->where('sl_no',$item->sl_no)->where('ref_no',$item->ref_no)->count();
-                                $batch_data = App\StockOutNew::where('item',$item->item)->where('sl_no',$item->sl_no)->where('ref_no',$item->ref_no)->groupBy('batch')->get();
+                                $item_c = App\StockOutNew::where('item',$item->item)->where('sl_no',$item->sl_no)->count();
+                                $batch_data = App\StockOutNew::where('item',$item->item)->where('sl_no',$item->sl_no)->groupBy('batch')->get();
                                 $batch_c = count($batch_data);
 
                                 for($i = 0;$i < $batch_c;$i++){
@@ -88,7 +88,7 @@
                     </tbody>
                     <tfooter>
                         <tr>
-                        <td colspan="5"  style='padding:5px;'><b> Transport No: {{@$transport_no}}</b></td>
+                        <td colspan="5"  style='padding:5px;'><b> Transport No: {{@$itemWise[0]->transport_no}}</b></td>
                         </tr>
                         <tr>
                             <td colspan="5"  style='padding:5px;'><b>Signature & Date: </b></td>
@@ -115,7 +115,7 @@
 </script>
 <script>
     $(window).on('afterprint', function () {
-        window.location.href = "{{ url("/stockout-slip") }}";
+        window.location.href = "{{ url('/stockout-slip/reprint') }}";
     });
 </script>
 <script type="text/javascript" src="{{ asset('public/front_end/js/bootstrap.min.js') }}"></script>

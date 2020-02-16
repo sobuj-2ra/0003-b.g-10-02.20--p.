@@ -225,16 +225,17 @@ class InvoiceController extends Controller
         $toDateW = Date('Y-m-d 23:59:59', $toDateTime);
 
 
-        $allDatas = Barcode::select('created_at','barcode','shift','m_id','grade')->whereBetween('created_at',[$from,$toDateW])
-                                ->get();
-        $Datas = collect($allDatas);
-        $barcodeData = $Datas->groupBy(function($item) {
-          return Carbon::parse($item->created_at)->format('Y-m-d ');
-        });
+        $barcodeData = Barcode::select('created_at','barcode','shift','m_id','grade')->whereBetween('created_at',[$from,$toDateW])
+                          ->groupBy(DB::raw('Date(created_at)'))      
+                          ->get();
+        // $Datas = collect($allDatas);
+        // $barcodeData = $Datas->groupBy(function($item) {
+        //   return Carbon::parse($item->created_at)->format('Y-m-d ');
+        // });
 
         //return $barcodeData;
 
-        return view('admin.report.production_summ_report_result_table', compact(['barcodeData','fromDate','toDate','Datas']));
+        return view('admin.report.production_summ_report_result_table_old', compact(['barcodeData','fromDate','toDate']));
     }
     public function ReportProductionDetails(){
       return view('admin.report.production_detail_report');

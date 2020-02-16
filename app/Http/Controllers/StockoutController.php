@@ -16,6 +16,8 @@ use App\Traits\FindItemFromBarcode;
 use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use DB;
 
 class StockoutController extends Controller
 {
@@ -134,6 +136,51 @@ class StockoutController extends Controller
       $allOrderRef = OrderRef::orderBy('id','DESC')->get();
       return view('user.stockout_hand',compact('allOrderRef'));
     }
+
+    public function getMonthCode($month){
+          switch ($month) {
+            case '01':
+                return 'A';
+                break;
+            case '02':
+                return 'B';
+                break;
+            case '03':
+                return 'C';
+                break;
+            case '04':
+                return 'D';
+                break;
+            case '05':
+                return 'E';
+                break;
+            case '06':
+                return 'F';
+                break;
+            case '07':
+                return 'G';
+                break;
+            case '08':
+                return 'H';
+                break;
+            case '09':
+                return 'I';
+                break;
+            case '10':
+                return 'J';
+                break;
+            case '11':
+                return 'K';
+                break;
+            case '12':
+                return 'L';
+                break;
+
+            default:
+                return 'AAA';
+                break;
+        }
+    }
     public function stockOutStoreTemp(Request $request){
             $datas = $request->all();
             $user_id = Auth::user()->id;
@@ -155,37 +202,41 @@ class StockoutController extends Controller
             foreach($arrTemp as $i=>$item){
 
               $bar_code = $item['barcode'];
+              if(strlen($bar_code) == 29){
+                    $bar_year = substr($bar_code,6,2);
+                    $bar_month = substr($bar_code,8,2);
+                    $bar_monthF = $this->getMonthCode($bar_month);
+                    $bar_day = substr($bar_code,10,2);
+                    $bar_shift = substr($bar_code,12,1);
+                    $bar_grade = substr($bar_code,13,1);
+                    $bar_item = substr($bar_code,16,7);
+                    $bar_batch = $bar_day.$bar_monthF.$bar_year.$bar_shift.$bar_grade;
 
-              $getbarcode = Barcode::where('barcode', $bar_code)->where('status','<>',0)->first();
-              if($getbarcode){
-                $check_if_already_stockout = Temporarystockout::where('barcode',$getbarcode->barcode)->where('status',1)->count();
-                if($check_if_already_stockout < 1){
-                    $datastockin = new Temporarystockout([
-                      'order_ref' => $order_ref,
-                      'barcode' => $getbarcode->barcode,
-                      'item' =>$getbarcode->item,
-                      'batch' => $getbarcode->batch_no,
-                      'selected_date' => $selectedDate,
-                      'saved_by' => $user_id,
-                      'status' => 1,
-                    ]);
-                    $datastockin->save();
-                    
-                    // $oldItemQty = Item::where('item_code',$getbarcode->item)->first();
-                    // $qtyF = $oldItemQty['item_qty']+1;
-                    // $itemData = Item::where('item_code',$getbarcode->item)->first();
-                    // $itemData->item_qty = $qtyF;
-                    // $itemData->update();
-                    $barcodeT = Barcode::where('barcode',$getbarcode->barcode)->first();
-                    $barcodeT->status = 3;
-                    $barcodeT->update();
+                    $is_item = Item::where('item_code', $bar_item)->first();
+                    if($is_item){
+                      $check_if_already_stockout = Temporarystockout::where('barcode',$bar_code)->where('status',1)->count();
+                      if($check_if_already_stockout < 1){
+                          $datastockin = new Temporarystockout([
+                            'order_ref' => $order_ref,
+                            'barcode' => $bar_code,
+                            'item' =>$bar_item,
+                            'batch' => $bar_batch,
+                            'selected_date' => $selectedDate,
+                            'saved_by' => $user_id,
+                            'status' => 1,
+                          ]);
+                          $datastockin->save();
 
-                    $succArr[$i]['barcode'] = $item['barcode'];
-                }
-                else{
-                  $rejectArr[$i]['barcode'] = $item['barcode'];
-                }
-              }else{
+                          $succArr[$i]['barcode'] = $item['barcode'];
+                      }
+                      else{
+                        $rejectArr[$i]['barcode'] = $item['barcode'];
+                      }
+                    }else{
+                      $rejectArr[$i]['barcode'] = $item['barcode'];
+                    }
+              }
+              else{
                 $rejectArr[$i]['barcode'] = $item['barcode'];
               }
 
@@ -203,14 +254,11 @@ class StockoutController extends Controller
             $total_fail_data = Failed_handheld::where('fail_by',$user_id)
               ->whereDate('fail_date', Date('Y-m-d'))
               ->count();
-            //$total_fail_data = count($total_fail_data);
-            //echo 'Total F'.$total_fail_data;
 
             $total_save = Temporarystockout::whereDate('selected_date', Date('Y-m-d'))
                       ->where('saved_by',$user_id)
                       ->where('status',1)
                       ->count();
-          // $total_save = count($total_save);
             $recent_saved = count($succArr);
             $recent_failed = count($rejectArr);
 
@@ -296,11 +344,44 @@ class StockoutController extends Controller
 
     public function StockOutRePrint(Request $r){
       $sl_no = $r->sl_no;
-      $itemWise = StockOutNew::where('sl_no',$sl_no)->groupBy('item')->get();
-      return $itemWise[0];
-      return view('user.reprint_slip_print',compact('sl_no','itemWise'));
+      $allSL = StockOutNew::where('sl_no','<>',null)->groupBy('sl_no')->orderBy('id','DESC')->get();
+      $itemWise = StockOutNew::where('sl_no',$sl_no)->groupBy('item')->with('GetCustName')->get();
+      $cust_Data = Customer::find($itemWise[0]->cust_id);
+      $cust_name = $cust_Data->cust_name;
+      return view('user.reprint_slip_print',compact('sl_no','itemWise','allSL','cust_name'));
     }
 
+
+
+    public function stockoutReport(){
+      
+      // if (!Auth::user()->can('production_stockin_report')) {
+      //     return redirect()->route('index')->with('warning','You are not authorized to access that page');
+      // }
+        return view('admin.report.stockout_report');
+    }
+
+    public function stockoutReportResult(Request $request){
+      // if (!Auth::user()->can('production_stockin_report')) {
+      //     return redirect()->route('index')->with('warning','You are not authorized to access that page');
+      // }
+        $from = $fromDate = $request->from_date;
+        $from = date('Y-m-d',strtotime($from));
+        $from  = $from.' 00:00:00';
+        $to = $toDate = $request->to_date;
+        $to = date('Y-m-d',strtotime($to));
+        $to  = $to.' 23:59:59';
+
+        $stockinDatas = StockOutNew::whereBetween('created_at',[$from,$to])
+                          ->groupBy(DB::raw('Date(created_at)')) 
+                          ->get();
+
+        // $Datas = collect($stockoutDatas);
+        // $stockinDatas = $Datas->groupBy(function($item) {
+        //   return Carbon::parse($item->created_at)->format('Y-m-d ');
+        // });
+        return view('admin.report.stockout_report_result', compact(['stockinDatas','fromDate','toDate']));
+    }
 
 
 }

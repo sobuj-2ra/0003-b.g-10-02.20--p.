@@ -11,7 +11,7 @@
 <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1 style="display: inline-block;">
-        Stock In Report
+        Stock Out Report
       </h1>
     </section>
 
@@ -33,7 +33,7 @@
                         <br>
                         <div class="production_report_head" style="text-align:center">
                           <h3 style="margin-bottom:0px;">Bengal Glass Works Ltd.</h3>
-                          <p><i style="padding-bottom:10px;">- Production Stock In Report -</i></p>
+                          <p><i style="padding-bottom:10px;">- Production Stock Out Report -</i></p>
                           <p>
                             Date:
                             @if($fromDate == $toDate)
@@ -57,7 +57,7 @@
                                     $date = Date('d-m-Y',strtotime($data->created_at));
                                     $dateFormate = Date('Y-m-d 00:00:00',strtotime($data->created_at));
                                     $dateFormate2 = Date('Y-m-d 23:59:59',strtotime($data->created_at));
-                                    $items = App\ProductStockIn::whereBetween('created_at',[$dateFormate,$dateFormate2])->groupBy('item')->get();
+                                    $items = App\StockOutNew::whereBetween('created_at',[$dateFormate,$dateFormate2])->groupBy('item')->get();
                                     $total_batch = 0;
                                     $itemV = 0;
                                     $is_date = true;
@@ -66,7 +66,7 @@
                                     $ix =0;
                                     $ItemTemp = '';
                                     foreach ($items as $index1 => $item) {
-                                      $itemBatch = App\ProductStockIn::whereBetween('created_at',[$dateFormate,$dateFormate2])->where('item',$item->item)->groupBy('batch_no')->get();
+                                      $itemBatch = App\StockOutNew::whereBetween('created_at',[$dateFormate,$dateFormate2])->where('item',$item->item)->groupBy('batch')->get();
                                       $total_batch = $total_batch + count($itemBatch);
                                       array_push($itemsArr, $item->item);
                                     }
@@ -81,7 +81,7 @@
                                                 $is_date = false;
                                               }
                                               if($itemV < count($itemsArr)){
-                                                $itemBatch = App\ProductStockIn::whereBetween('created_at',[$dateFormate,$dateFormate2])->where('item',$itemsArr[$itemV])->groupBy('batch_no')->get();
+                                                $itemBatch = App\StockOutNew::whereBetween('created_at',[$dateFormate,$dateFormate2])->where('item',$itemsArr[$itemV])->groupBy('batch')->get();
 
                                                 $itemBatchC = count($itemBatch);
                                                 if($i >= $ix){
@@ -93,9 +93,9 @@
                                                   $itemV++;
                                                 }
                                               }
-                                                $itemBatch = App\ProductStockIn::whereBetween('created_at',[$dateFormate,$dateFormate2])->where('item',$ItemTemp)->groupBy('batch_no')->get();
+                                                $itemBatch = App\StockOutNew::whereBetween('created_at',[$dateFormate,$dateFormate2])->where('item',$ItemTemp)->groupBy('batch')->get();
                                                   foreach ($itemBatch as  $iBatch) {
-                                                    array_push($itemBatchArr, $iBatch->batch_no);
+                                                    array_push($itemBatchArr, $iBatch->batch);
                                                   }
                                                 sort($itemBatchArr);
                                    
@@ -103,7 +103,7 @@
                                                   echo "<td  style='padding:5px 8px'>";
                                                   echo $itemBatchArr[0];
                                                   echo "</td>";
-                                                  $itemBatch_porduct_c = App\ProductStockIn::whereBetween('created_at',[$dateFormate,$dateFormate2])->where('item',$ItemTemp)->where('batch_no',$itemBatchArr[0])->count();
+                                                  $itemBatch_porduct_c = App\StockOutNew::whereBetween('created_at',[$dateFormate,$dateFormate2])->where('item',$ItemTemp)->where('batch',$itemBatchArr[0])->count();
 
                                                   echo "<td  style='padding:5px 8px'>";
                                                   echo $itemBatch_porduct_c;
@@ -116,7 +116,7 @@
                                                     echo "<td  style='padding:5px 8px'>";
                                                       echo $itemBatchArr[$b_inx];
                                                     echo "</td>";
-                                                    $itemBatch_porduct_c = App\ProductStockIn::whereBetween('created_at',[$dateFormate,$dateFormate2])->where('item',$ItemTemp)->where('batch_no',$itemBatchArr[$b_inx])->count();
+                                                    $itemBatch_porduct_c = App\StockOutNew::whereBetween('created_at',[$dateFormate,$dateFormate2])->where('item',$ItemTemp)->where('batch',$itemBatchArr[$b_inx])->count();
                                                     echo "<td  style='padding:5px 8px'>";
                                                     echo $itemBatch_porduct_c;
                                                     echo "</td>";
@@ -129,7 +129,7 @@
                                                         echo "<td  style='padding:5px 8px'>";
                                                           echo $itemBatchArr[$b_inx];
                                                         echo "</td>";
-                                                        $itemBatch_porduct_c = App\ProductStockIn::whereBetween('created_at',[$dateFormate,$dateFormate2])->where('item',$ItemTemp)->where('batch_no',$itemBatchArr[$b_inx])->count();
+                                                        $itemBatch_porduct_c = App\StockOutNew::whereBetween('created_at',[$dateFormate,$dateFormate2])->where('item',$ItemTemp)->where('batch',$itemBatchArr[$b_inx])->count();
                                                         echo "<td  style='padding:5px 8px'>";
                                                         echo $itemBatch_porduct_c;
                                                         echo "</td>";

@@ -127,6 +127,9 @@ Route::get('stockout-slip-print','StockoutController@SlipSearchDataPrint');
 Route::get('stockout-slip/reprint','StockoutController@StockOutRePrintView');
 Route::post('stockout-slip/reprint','StockoutController@StockOutRePrint');
 
+/// stock out report //
+Route::get('report/stockout','StockoutController@stockoutReport');
+Route::post('report/stockout/result','StockoutController@stockoutReportResult');
 
 //Sales order
 Route::post('tempSalesOrder','StockoutController@tempSalesOrder')->name('tempSalesOrder');

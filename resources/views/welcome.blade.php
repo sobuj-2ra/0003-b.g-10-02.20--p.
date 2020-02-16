@@ -10,8 +10,8 @@
 <body>
 
 <div class="bg-grey h-100">
-    <div class="container d-flex h-100">
-        <div class="row h-100 text-center justify-content-center align-items-center">
+    <div class="container">
+        {{-- <div class="row h-100 text-center justify-content-center align-items-center">
             <div class="col-12">
                 @include('includes.messages')
                 <div class="row text-center">
@@ -78,7 +78,46 @@
                 </div>
             </div>
 
+        </div> --}}
+        
+        <div class="col-md-12">
+            <br>
+            <br>
+            <br>
+            <div class="rows">
+                @can('dailyshift_section')
+                <div class=" col-md-6">
+                   <a href="{{ route('dailyshift') }}" class="btn btn-danger btn-lg form-control" style="padding:15px">SHIFT</a>
+                </div>
+                <br>
+                @endcan
+                @can('machine_section')
+                <div class="col-md-6">
+                   <a href="{{ route('allmachine') }}" class="btn btn-danger btn-lg form-control" style="padding:15px">MACHINES</a>
+                </div>
+                <br>
+                @endcan
+                @can('delivery_section')
+                <div class="col-md-6">
+                   <a href="{{ URL::to('delivery-section') }}" class="btn btn-danger btn-lg form-control" style="padding:15px">DELIVERY SECTION</a>
+                </div>
+                <br>
+                @endcan
+                @can('admin_section')
+                <div class="col-md-6">
+                    <a href="{{ route('dashboard') }}" class="btn btn-danger btn-lg form-control" style="padding:15px">ADMIN SECTION</a>
+                </div>
+                <br>
+                @endcan
+                @can('handheld_section')
+                <div class="col-md-6">
+                    <a href="{{ route('hand-held-section') }}" class="btn btn-danger btn-lg form-control" style="padding:15px">HAND HELD SECTION</a>
+                </div>
+                <br>
+                @endcan
+            </div>
         </div>
+
     </div>
 </div>
 

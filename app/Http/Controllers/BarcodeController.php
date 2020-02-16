@@ -106,6 +106,8 @@ class BarcodeController extends Controller
                 'shift' => $request->shift,
                 'm_id' => $request->machine,
                 'grade' => $request->grade,
+                'watcher' => $request->watcher,
+                'packer' => $request->packer,
                 'created_at' => $curDateTime,
                 'updated_at' => $curDateTime,
             );
@@ -341,7 +343,7 @@ class BarcodeController extends Controller
         $production_date = $this->getProductionDateweb($request);
         // dd($production_date);
 
-        //return sprintf('%06d', $last_num).$production_date['year'].$production_date['month'].$production_date['day'].$request['shift'].$request['grade'].$shift_data['machine'].'_A'.str_replace('.','',$request['watcher']).str_replace('.','',$request['packer']);
+        // return sprintf('%06d', $last_num).$production_date['year'].$production_date['month'].$production_date['day'].$request['shift'].$request['grade'].$shift_data['machine'].'_A'.str_replace('.','',$request['watcher']).str_replace('.','',$request['packer']);
         return sprintf('%06d', $last_num).$production_date['year'].$production_date['month'].$production_date['day'].$request['shift'].$request['grade'].$shift_data['machine'].$items.str_replace('.','',$request['watcher']);
     }
 

@@ -31,6 +31,7 @@ class ProductStockInController extends Controller
             $succArr = [];
             $rejectArr = [];
 
+
             foreach($request->barcode as $index=>$row)
             {
               $arrTemp[$index]['barcode'] = $datas['barcode'][$index];
@@ -43,31 +44,25 @@ class ProductStockInController extends Controller
 
               $getbarcode = Barcode::where('barcode', $bar_code)->where('status',1)->first();
               if($getbarcode){
-                $check_if_already_stockin = ProductStockIn::where('barcode',$getbarcode->barcode)->where('is_delivered',0)->count();
-                if($check_if_already_stockin < 1){
-                    $datastockin = new ProductStockIn([
-                      'barcode' => $getbarcode->barcode,
-                      'item' =>$getbarcode->item,
-                      'batch_no' => $getbarcode->batch_no,
-                      'stock_by' => $user_id,
-                      'is_delivered' => 0,
-                    ]);
-                    $datastockin->save();
-                    
-                    $oldItemQty = Item::where('item_code',$getbarcode->item)->first();
-                    $qtyF = $oldItemQty['item_qty']+1;
-                    $itemData = Item::where('item_code',$getbarcode->item)->first();
-                    $itemData->item_qty = $qtyF;
-                    $itemData->update();
-                    $barcodeT = Barcode::where('barcode',$getbarcode->barcode)->first();
-                    $barcodeT->status = 2;
-                    $barcodeT->update();
+                  $datastockin = new ProductStockIn([
+                    'barcode' => $getbarcode->barcode,
+                    'item' =>$getbarcode->item,
+                    'batch_no' => $getbarcode->batch_no,
+                    'stock_by' => $user_id,
+                    'is_delivered' => 0,
+                  ]);
+                  $datastockin->save();
+                  
+                  $oldItemQty = Item::where('item_code',$getbarcode->item)->first();
+                  $qtyF = $oldItemQty['item_qty']+1;
+                  $itemData = Item::where('item_code',$getbarcode->item)->first();
+                  $itemData->item_qty = $qtyF;
+                  $itemData->update();
+                  $barcodeT = Barcode::where('barcode',$getbarcode->barcode)->where('status',1)->first();
+                  $barcodeT->status = 0;
+                  $barcodeT->update();
 
-                    $succArr[$i]['barcode'] = $item['barcode'];
-                }
-                else{
-                  $rejectArr[$i]['barcode'] = $item['barcode'];
-                }
+                  $succArr[$i]['barcode'] = $item['barcode'];
               }else{
                 $rejectArr[$i]['barcode'] = $item['barcode'];
               }
@@ -186,13 +181,10 @@ class ProductStockInController extends Controller
         $to  = $to.' 23:59:59';
 
         $stockinDatas = ProductStockIn::whereBetween('created_at',[$from,$to])
+        ->groupBy(DB::raw('Date(created_at)')) 
         ->get();
 
-        $Datas = collect($stockinDatas);
-        $stockinDatas = $Datas->groupBy(function($item) {
-          return Carbon::parse($item->created_at)->format('Y-m-d ');
-        });
-        return view('admin.report.stockin_report_result', compact(['stockinDatas','Datas','fromDate','toDate']));
+        return view('admin.report.stockin_report_result', compact(['stockinDatas','fromDate','toDate']));
     }
 
     public function storeReport(){
