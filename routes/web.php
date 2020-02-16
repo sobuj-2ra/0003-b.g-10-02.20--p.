@@ -126,6 +126,7 @@ Route::post('stockout-slip','StockoutController@SlipSearchDataGet');
 Route::get('stockout-slip-print','StockoutController@SlipSearchDataPrint');
 Route::get('stockout-slip/reprint','StockoutController@StockOutRePrintView');
 Route::post('stockout-slip/reprint','StockoutController@StockOutRePrint');
+Route::get('get_item_info','StockoutController@getItemInfo');
 
 /// stock out report //
 Route::get('report/stockout','StockoutController@stockoutReport');

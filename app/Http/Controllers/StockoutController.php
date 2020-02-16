@@ -383,5 +383,13 @@ class StockoutController extends Controller
         return view('admin.report.stockout_report_result', compact(['stockinDatas','fromDate','toDate']));
     }
 
+    public function getItemInfo(Request $r){
+      $ref = $r->ref;
+      $item = $r->item_no;
+
+      $itemWiseData = Temporarystockout::where('order_ref',$ref)->where('item',$item)->where('status',1)->get();
+      return response()->json(['itemWiseData'=>$itemWiseData]);
+    }
+
 
 }

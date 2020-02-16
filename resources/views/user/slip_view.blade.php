@@ -21,6 +21,20 @@
             margin:0 auto;
             background: #dddd;
         }
+        .item_info_overlay{
+            position: absolute;
+            left: 0;
+            top:1020;
+            height:100%;
+            width:100%;
+            background: #fff;
+        }
+        .item_info_overlay p{
+            position: absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+        }
     </style>
 </head>
 <body>
@@ -31,97 +45,37 @@
 			<div class="col-12 mx-auto">
 			</div>
 			<div class="col-12">
-                <div id="show_detail_barcode">
-                    <div class="col-md-6 col-md-offset-3">
+                <div v-show="dataPanel" id="show_detail_barcode">
+                    <div class="col-md-6 col-md-offset-2">
                         <div class="panel panel-danger">
                             <div class="panel-heading">
-                                <button @click="dismiss_btnFunc" class="btn btn-sm bg-danger pull-right" style="background:#f55959;color:#fff;display:block"><b>X</b></button>
+
+                                <p>
+                                    <button @click="dismiss_btnFunc" class="btn btn-sm bg-danger pull-right" style="background:#f55959;color:#fff;margin-top:-10px"><b>X</b></button>
+
+                                </p>
                             </div>
-                            <div class="panel-body">
+                            <div class="panel-body" style="position: relative">
+                                <div v-if="preloader" class="item_info_overlay">
+                                    <p style="text-align:center;">Loading...</p>
+                                </div>
                                 <div class="table-area" style="overflow-x:auto;">
                                     <table class="table table-responsive table-striped">
                                         <thead>
                                             <tr>
+                                                <td colspan="4" align="center"><b>@{{itemName}}</b></td>
+                                            </tr>
+                                            <tr>
                                                 <th>Sl</th>
-                                                <th>Item</th>
                                                 <th>Barcode</th>
+                                                <th>Batch</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0124</td>
-                                                <td>23435243542545</td>
+                                            <tr v-for="(s_item,i) in dataArr">
+                                                <td>@{{i+1}}</td>
+                                                <td>@{{s_item.barcode}}</td>
+                                                <td>@{{s_item.batch}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -180,8 +134,8 @@
                                                         $is_item = true;
                                                         foreach($itemWise as $item){
                                                             $item_data = App\Item::select('item_code','item_name', 'pack_size')->where('item_code',$item->item)->first();
-                                                            $item_c = App\Temporarystockout::where('item',$item->item)->where('status',1)->count();
-                                                            $batch_data = App\Temporarystockout::where('item',$item->item)->where('status',1)->groupBy('batch')->get();
+                                                            $item_c = App\Temporarystockout::where('item',$item->item)->where('order_ref',$ref)->where('status',1)->count();
+                                                            $batch_data = App\Temporarystockout::where('item',$item->item)->where('order_ref',$ref)->where('status',1)->groupBy('batch')->get();
                                                             $batch_c = count($batch_data);
 
                                                             for($i = 0;$i < $batch_c;$i++){
@@ -195,9 +149,9 @@
                                                                  
                                                                     if($is_item){
                                                                         echo "<td rowspan=".$batch_c.">";
-                                                                            ?>
-                                                                                <button @click="show_btn" class="btn btn-info">Show</button>
-
+                                                                            ?> 
+                                                                                <button @click="show_btn({{$item_data['item_code']}})"  data="{{$ref}}" class="btn btn-info">View</button>
+                                                                                <input type="hidden" value="{{$item_data['item_name']}}" id="{{$item_data['item_code']}}">
                                                                             <?php
                                                                         echo "</td>";
                                                                         $is_item = false;   
@@ -217,7 +171,7 @@
                                             @if(@$itemWise && count($itemWise) > 0)
                                                 <form action="{{URL::to('stockout-slip-print')}}" method="GET">
                                                     Transport No. <input type="text" name="transport_no" required> Sales Order: <input type="text" name="sales_order" required> <input onclick="return confirm('Are You Sure! You want to Print & Save')" class="btn btn-warning" type="submit" value="Print & Save">
-                                                    <input type="hidden" name="ref_no" value="{{@$ref}}">
+                                                    <input type="hidden" name="ref_no" id="ref_id" value="{{@$ref}}">
                                                     <input type="hidden" name="cust_name" value="{{@$cust_name}}">
                                                     <input type="hidden" name="cust_id" value="{{@$cust_id}}">
                                                     <input type="hidden" name="sl_no" value="{{@$sl_no}}">
@@ -238,22 +192,37 @@
 
 <script type="text/javascript" src="{{asset('public/front_end/js/vue.js')}}"></script>
 <script type="text/javascript" src="{{asset('public/front_end/js/axios.js')}}"></script>
-<script>
+<script type="text/javascript">
      $('#show_detail_barcode').hide();
 	 const app = new Vue({
 	    el: '#app9',
 	    data: {
-	    	sales_order :{},
-	    	test: 0,
-	    	message: ''
+            dataArr:[],
+            itemName:'',
+            preloader:true ,
+            dataPanel:false,
+
 	    },
 
 	    methods: {
             dismiss_btnFunc:function(){
-                $('#show_detail_barcode').hide();
+               this.dataPanel = false;
             },
-            show_btn:function(){
-                $('#show_detail_barcode').show();
+            show_btn:function(item){
+                _this = this; 
+                this.preloader = true;   
+                var ref = $('#ref_id').val();
+                this.dataPanel = true;
+                axios.get('get_item_info',{params:{ref:ref,item_no:item}})
+                .then(function(res){
+                    console.log(res);
+                    _this.itemName = $('#'+item).val();
+                    _this.dataArr = res.data.itemWiseData;
+                    _this.preloader = false;
+                })
+                .catch(function(error){
+                    console.log(error);
+                })
             }
 
 
