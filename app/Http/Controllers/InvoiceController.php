@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\Barcode;
+use App\Shift;
 use DateTime;
 
 class InvoiceController extends Controller
@@ -239,5 +240,21 @@ class InvoiceController extends Controller
     }
     public function ReportProductionDetails(){
       return view('admin.report.production_detail_report');
+    }
+
+
+    public function ReportProductionShiftWise(){
+      $data['GetAllShift'] = Shift::all();
+      return view('admin.report.shift_wise_production',$data);
+    }
+    public function ReportProductionShiftWiseGet(Request $r){
+        $data['selected_shift'] = $r->shift_number;
+        $data['fromDate'] = $fromDate = DATE('Y-m-d 07:00:00',strtotime($r->from_date));
+          $To = DATE('Y-m-d H:i:s',strtotime($fromDate));
+          $Modifydate = new DateTime($To);
+          $Modifydate->modify('+1 day');
+        $data['toDate'] = $toDate = $Modifydate->format('Y-m-d H:i:s');
+        
+      return view('admin.report.shift_wise_production_view',$data);
     }
 }

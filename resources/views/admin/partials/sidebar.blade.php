@@ -150,6 +150,7 @@
     </a>
     <ul class="treeview-menu">
       <li><a href="{{ URL::to('report/production/summary') }}"><i class="fa fa-circle-o"></i>Production Summary</a></li>
+      <li><a href="{{ URL::to('report/production/shiftwise') }}"><i class="fa fa-circle-o"></i>Shift Wise Production</a></li>
       <li><a href="{{ URL::to('report/stockin') }}"><i class="fa fa-circle-o"></i>Stock In Report</a></li>
       <li><a href="{{ URL::to('report/stockout') }}"><i class="fa fa-circle-o"></i>Stock Out Report</a></li>
       <li><a href="{{ URL::to('report/store') }}"><i class="fa fa-circle-o"></i>Store Report</a></li>

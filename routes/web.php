@@ -173,6 +173,8 @@ Route::get('demo','TestController@demo');
 
 Route::get('report/production/summary', 'InvoiceController@ReportProductionSumm');
 Route::post('report/production/summary', 'InvoiceController@ReportProductionSummStore');
+Route::get('report/production/shiftwise', 'InvoiceController@ReportProductionShiftWise');
+Route::post('report/production/shiftwise', 'InvoiceController@ReportProductionShiftWiseGet');
 Route::get('report/production/details', 'InvoiceController@ReportProductionDetails');
 
 

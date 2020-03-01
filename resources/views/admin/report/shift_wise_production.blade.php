@@ -11,7 +11,7 @@
 <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1 style="display: inline-block;">
-        Production Detail Report 
+        Shift Wise Production Report 
       </h1>
     </section>
 
@@ -24,18 +24,23 @@
           @include('includes.messages')
                 <div class="row">
                   <div class="col-md-4 col-md-offset-4" style="box-shadow:0px 3px 5px #bdbdbd;background: #f7f7f7">
-                    <h3 style="color:green">--Production Details Report--</h3>
-                      <form role="form" id="ajax_form" action="{{ URL::to('report/production/summary') }}" method="POST" enctype="multipart/form-data">
+                    <h3 style="color:green">--Shift Wise Production Report--</h3>
+                      <form role="form"  action="{{ URL::to('report/production/shiftwise') }}" method="POST" enctype="multipart/form-data">
                         <div class="box-body">
                           {{ csrf_field() }}
                           <?php $curDate = Date('d-m-Y');?>
                           <div class="form-group">
-                            <label for="item_name">From: </label>
+                            <label for="item_name">Select Date: </label>
                             <input type="text" name="from_date" value="{{$curDate}}" class=" form-control" id="datepicker"required>
                           </div>
                           <div class="form-group">
-                            <label for="item_name">To: </label>
-                            <input type="text" name="to_date" value="{{$curDate}}" class="form-control" id="datepicker2" required>
+                            <label for="item_name">Select Shift: </label>
+                            <select name="shift_number" id="" class="form-control" required>
+                              <option value=""></option>
+                              @foreach($GetAllShift as $shift)
+                                <option value="{{$shift->shift_number}}">{{$shift->shift_number.' - '.$shift->shift_start.' '.$shift->shift_end}}</option>
+                              @endforeach
+                              </select>
                           </div>
                         </div>
                         <!-- /.box-body -->
