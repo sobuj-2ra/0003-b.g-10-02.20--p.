@@ -13,7 +13,7 @@
 <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1 style="display: inline-block;">
-        Production Summary Report
+        SHIFT WISE PRODUCTION EFFICIENCY & QUALITY REPORT
       </h1>
     </section>
 
@@ -31,48 +31,102 @@
                             <button type="submit" class="btn btn-primary pull-right" style="padding: 7px 22px;margin:10px" onclick="printDiv('printableArea')" style="margin-right:10px;">Print</button>
                         </div>
                     </div>
-                      <div id="printableArea" class="proction_summ_result_area">
-                        <div class="production_report_head" style="text-align:center">
-                          <h3 style="margin-bottom:0px;">Bangal Glass Works Project</h3>
-                          <p><i style="padding-bottom:10px;">--Production Summary Report--</i></p>
-                          <p>
-                           
-                          </p>
-                        </div>
-                          <table border="1"class="text-center" style="background:#FFF;width:100%">
-                                <tr>
-                                  <th style="padding:5px 8px;">Saction Name</th>
-                                  <th style="padding:5px 8px;">Item Name</th>
-                                  <th style="padding:5px 8px;">Quantity Pcs</th>
-                                  <th style="padding:5px 8px;">A-Quality(%)</th>
-                                  <th style="padding:5px 8px;">B-Quality(%)</th>
-                                </tr>
+                    <div class="table_result_view_area" style="background:#FFF;padding:10px;">
+                          <div id="printableArea" style="background:#FFF;">
+                                <table border="1" class="" style="width:100%" >
+                                  <thead>
+                                      <tr>
+                                      <th rowspan="5" style="padding:0px 5px;text-align:center;width:100px;"><img class="img img-responsive" src="{{URL::to('public/storage/logo.png')}}" alt="LOGO HERE"></th>
+                                      </tr>
+                                      <tr>
+                                          <th rowspan="2" style="padding:5px;text-align:center">THE BENGAL GLASS WORKS LTD.</th>
+                                          <th style="padding:5px;text-align:center">Document No.</th>
+                                          <th style="padding:5px;text-align:center">BG-IMS-F-STR-009</th>
+                                      </tr>
+                                      <tr>
+                                          <th style="padding:5px;text-align:center">Revision No.</th>
+                                          <th style="padding:5px;text-align:center">01</th>
+                                      </tr>
+                                      <tr>
+                                          <th style="padding:5px;text-align:center">INTEGRATED MANAGEMENT SYSTEM</th>
+                                          <th style="padding:5px;text-align:center">Effective Date</th>
+                                          <th style="padding:5px;text-align:center">22.06.2015</th>
+                                      </tr>
+                                      <tr>
+                                          <th style="padding:5px;text-align:center">SHIFT WISE PRODUCTION EFFICIENCY & QUALITY REPORT</th>
+                                          <th style="padding:5px;text-align:center">Page No.</th>
+                                          <th style="padding:5px;text-align:center">Page 1 of 1</th>
+                                      </tr>
+                                  </thead>
+                              </table>
+                              <br>
+                              <span><b>Date:- {{Date('d-m-Y',strtotime($fromDate))}}</b></span><span class="pull-right"><b>Shift:- {{$selected_shift}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></span>
+                                <table border="1"class="text-center" style="width:100%">
+                                      <tr>
+                                        <th style="padding:5px 8px;">Saction Name</th>
+                                        <th style="padding:5px 8px;">Item Name</th>
+                                        <th style="padding:5px 8px;">Quantity Carton</th>
+                                        <th style="padding:5px 8px;">Quantity Pcs</th>
+                                        <th style="padding:5px 8px;">A-Quality(%)</th>
+                                        <th style="padding:5px 8px;">B-Quality(%)</th>
+                                      </tr>
 
-                                <?php
-                                  $machineData = App\Barcode::whereBetween('created_at',[$fromDate,$toDate])->where('shift',$selected_shift)->groupBy('m_id')->get();
-                                  echo count($machineData);
-                                  foreach($machineData as $machine){
-                                    $itemData = App\Barcode::whereBetween('created_at',[$fromDate,$toDate])->where('shift',$selected_shift)->where('m_id',$machine->m_id)->groupBy('item')->get();
-                                    $itemData_c = count($itemData)+1;
-                                    $totalProduct = App\Barcode::whereBetween('created_at',[$fromDate,$toDate])->where('shift',$selected_shift)->where('m_id',$machine->m_id)->get();
-                                    echo "<tr>";
-                                      echo "<td rowspan='".$itemData_c."' style='width:30px'>".$machine->m_id."</td>";
-                                    echo "</tr>";
-                                    
-                                    for($i=0; $i < count($itemData); $i++){
-                                      echo "<tr>";
-                                        echo "<td>".$itemData[$i]['item']."</td>";
-                                        if($i == 0){
-                                          echo "<td rowspan='".count($itemData)."'>34</td>";
-                                          echo "<td rowspan='".count($itemData)."'>30%</td>";
-                                          echo "<td rowspan='".count($itemData)."'>70%</td>";
+                                      <?php
+                                        $machineData = App\Barcode::whereBetween('created_at',[$fromDate,$toDate])->where('shift',$selected_shift)->groupBy('m_id')->get();
+                                        
+                                        foreach($machineData as $machine){
+                                          $itemData = App\Barcode::whereBetween('created_at',[$fromDate,$toDate])->where('shift',$selected_shift)->where('m_id',$machine->m_id)->groupBy('item')->get();
+                                          $itemData_c = count($itemData)+1;
+                                          $totalProduct = App\Barcode::whereBetween('created_at',[$fromDate,$toDate])->where('shift',$selected_shift)->where('m_id',$machine->m_id)->get();
+                                          echo "<tr>";
+                                            echo "<td rowspan='".$itemData_c."' style='width:30px'>".$machine->m_id."</td>";
+                                          echo "</tr>";
+                                          $totalProduction = App\Barcode::whereBetween('created_at',[$fromDate,$toDate])->where('shift',$selected_shift)->where('m_id',$machine->m_id)->count();
+                                          $totalQtyPcs = 0;
+                                          foreach ($itemData as $itemC) {
+                                            $TotalItemQty = App\Barcode::whereBetween('created_at',[$fromDate,$toDate])->where('shift',$selected_shift)->where('m_id',$machine->m_id)->where('item',$itemC->item)->count();
+                                            $totalItemPackSize = App\Item::select('item_code','pack_size')->where('item_code', $itemC->item)->first();
+                                            $totalQtyPcs += $totalItemPackSize['pack_size']*$TotalItemQty;
+                                          }
+                                          for($i=0; $i < count($itemData); $i++){
+                                            $itemQtyBox = App\Barcode::whereBetween('created_at',[$fromDate,$toDate])->where('shift',$selected_shift)->where('m_id',$machine->m_id)->where('item',$itemData[$i]['item'])->count();
+                                            $itemQtyBoxA = App\Barcode::whereBetween('created_at',[$fromDate,$toDate])->where('shift',$selected_shift)->where('m_id',$machine->m_id)->where('item',$itemData[$i]['item'])->where('grade','A')->count();
+                                            $itemQtyBoxB = App\Barcode::whereBetween('created_at',[$fromDate,$toDate])->where('shift',$selected_shift)->where('m_id',$machine->m_id)->where('item',$itemData[$i]['item'])->where('grade','B')->count();
+                                            $itemPackSize = App\Item::select('item_code','pack_size','item_name')->where('item_code',$itemData[$i]['item'])->first();
+                                            $itemQtyBoxAF = $itemQtyBoxA*$itemPackSize['pack_size'];
+                                            $itemQtyBoxBF = $itemQtyBoxB*$itemPackSize['pack_size'];
+                                            $APercen = ($itemQtyBoxAF*100)/$totalQtyPcs;
+                                            $BPercen = ($itemQtyBoxBF*100)/$totalQtyPcs;
+                                            echo "<tr>";
+                                              echo "<td>".$itemPackSize['item_name']."</td>";
+                                                echo "<td>".$itemQtyBox."</td>";
+                                                echo "<td>".$itemQtyBox*$itemPackSize['pack_size']."</td>";
+                                                if($APercen > 0){
+                                                  echo "<td>".$itemQtyBoxA*$itemPackSize['pack_size'].' ('.number_format($APercen,0).')'."</td>";
+                                                }
+                                                else{
+                                                  echo "<td>".$itemQtyBoxA*$itemPackSize['pack_size'] .' ('.$APercen.')'."</td>";
+                                                }
+                                                if($BPercen > 0){
+                                                  echo "<td>".$itemQtyBoxB*$itemPackSize['pack_size'] .' ('.number_format($BPercen,0).')'."</td>";
+                                                }
+                                                else{
+                                                  echo "<td>".$itemQtyBoxB*$itemPackSize['pack_size'] .' ('.$BPercen.')'."</td>";
+                                                }
+                                            echo "</tr>";
+                                          }
                                         }
-                                      echo "</tr>";
-                                    }
-                                  }
-                                
-                                ?>
-                          </table>
+                                      
+                                      ?>
+                                </table>
+                                <br>
+                                Remarks:
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                Sent By:
+                            </div>
                       </div>
                   </div>
               </div>
